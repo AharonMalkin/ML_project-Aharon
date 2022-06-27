@@ -1,5 +1,5 @@
 # ML_project
-## instructions:
+## Instructions:
 Build a system that predicts the chances of a particular user, under certain conditions, to make a purchase while browsing the site.
 In the project we will deal with the problem of Binary Classification, in which you must classify records into two categories -
 is a user likely to buy (1) or not (0), based on the number of features in the data set. Some of the features are known and some are anonymous.
