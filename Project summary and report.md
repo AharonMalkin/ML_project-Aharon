@@ -31,7 +31,7 @@ the general visual presentation, and then delve into interesting features. I exa
 
 In the given data, the challenge was to adjust all the features and observations to uniform, numeric, and relevant values, therefore I made the following actions: 
 
-### a. Filling Null values:
+#### a. Filling Null values:
 The rule of thumb that guided me while filling in the missing values is the distinction between categorical features (such as
 'User type', 'month', 'region', 'browser', etc.) to the quantitative and continuous ones.
 
@@ -41,11 +41,11 @@ In contrast, the numeric features were filled with their median value.
 
 Some of the features were filled by mathematical manipulation, such as 'total duration' feature that was filled by the sum of all the features that composed it:           admin duration + product duration + info duration.
       
-###  b. Creating a new feature:
+####  b. Creating a new feature:
 The motivation for building a new class is a similar distribution between 2 features (found by distplot visualization)
 the same conclusion was derived from the correlation table where I found that there is a very high correlative match of 0.91 between 'ExitRate' and 'BounceRate'           features. Another rationale for creating the feature is to prepare for the dimension reduction phase and unify features that contribute in the same way.
 
- ###  c. Handling Outliers:
+ ####  c. Handling Outliers:
  First, I checked the distributions of each feature, and by using QQPLOT I determined whether it distributes normally. This step helped me identify outliers afterwards easily.
 	
 I identified that many features contain a numeric value starting with 0, which represents a quantity of time and contain outlier values 
@@ -58,7 +58,7 @@ filled with the threshold values I set on the 2 sides.
 The outliers were handled carefully and made it without deleting a single line in the data.
 In addition, some features have not been treated at all, which contained several Gaussians or a low amount of exceptions, so I refrained from corrupting them.
 
-### d. Handling Categorial features:
+#### d. Handling Categorial features:
 The motivation that guided me here is the optimization of the data which is many categorical values, meaning that for now, there is no statistical significance that exists for these features. Therefore, I used the One-Hot-Encoding method and created dummy values. By doing that, 10 additional features that represent 'browser', 'user_type' and 'Month' were added to our dataset.
 
 I assumed that a binary representation is better, so all the data will exist under the same vector space. On the other hand, features that contained only 2
@@ -70,12 +70,12 @@ In addition, I decided to remove features that I found at the exploration step i
 
 In contrast, the unknown feature 'C' that contained (in my opinion) HTTP requests from the server was selected and reduced to only 2 unique values (error / not error, depending on the request code).
 
-### e. Data Normalization:
+#### e. Data Normalization:
 Before reducing the dimensions I saw that the data is composed of different ranges, lengths and scales, and therefore we want to avoid unwanted effects and normalize the data.
 
 Based on the qqplot visualization that was performed, I used the StandardScaler function to change the values in the normally distributed features to the same variance 1 and mean 0, and to the non-normal features feature the MinMaxScaler function, to rescale them by converting their minimum and maximum values to be between 0 and 1.
 
-### f. Splitting to Train/Validation and Dimension reduction:
+#### f. Splitting to Train/Validation and Dimension reduction:
 After adding the categorical features (we now have 30 in total) I divided the set of the train to 80% / 20% for validation training. The current amount of features affects the uniqueness of each observation and significantly increases the complexity of our data.
 
 Since my goal is to predict a new user's chance to make a purchase on the site, I must optimize the data as much as possible and avoid overfitting and an overly complex model on the one hand and underfitting- when the model fails to express the ratio of observations to the desired output and handle each sample the same.
@@ -84,7 +84,7 @@ We can identify that there is a dimensional problem because the number of featur
 
 Since the new features created as a result of running the PCA are a linear combination and have no businesswise meaning, I searched for a tool to find the 9 best features that would explain the data most clearly. To do this I used a mutual info classifier that measures the level of dependence between the variables (entropy) in relation to our label. From this, the 9 features that will be run in the model phase were found.
 
-### g. Pre-processing on the Test set:
+#### g. Pre-processing on the Test set:
 The given set constitutes about 20% of the complete data. Therefore I performed all the pre-processing operations that I made on the train set, and also on the test set while maintaining the focus on the relevant features selected to perform the models. The rule of thumb that guided me in the pre-processing of this set, based on the different parameters of the train set, as we do not want to use the distributions of the test set because in business reality we will not always be able to be aware of the distributions of the test set, and I assume that the train set represents the data optimally.
 
 ### 3. Running the models:
@@ -94,24 +94,24 @@ To evaluate the quality of the model selection, I first created a function that 
 (The function performs a random split each time and therefore the results are reliable)
 
 Selected models:
-### a. Logistic Regression: 
+#### a. Logistic Regression: 
 First, I ran the GridSearchCV function so that we can use it to determine the best parameters according to the standard data that I selected in advance.
 By doing so, I found that the stop tolerance criterion would be 0.001 and the 'C' that defines the hyperparameter was set to 0.1, which means high regularization. 
 
 However, after running the model with C = 10 I got a similar AUC score, so I chose this parameter that punishes less and simulates reality more reliably. The AUC scores obtained were very good for the validation set (0.903) In addition, I tested the Train set and found that the model was not overfitted. (Score 0.904)
 
-### b. KNN:
+#### b. KNN:
 Here I ran again GridSearchCV which helped to select 100 neighbours and set the main weight by distance, meaning to give meaning to big proximity between neighbours.
 The distance calculated by the Manhattan method (absolute values) resulted in an AUC score of 0.9 in validation and a very high score of 0.995 in the train, although there is a difference between the two sets, the high amount of neighbours and running the model with more neighbours convinced me that the model was not overfitted.
 
-### c. Random Forest:
+#### c. Random Forest:
 In this model, the final parameters set by the GridSearchCV were examined along with dependence between other parameters (such as punishment, and depth of tree versus the number of trees) and their effect on the score.
 
 Finally, the following balance is set: I chose a forest with 1000 trees with a maximum depth of 8 for each tree (to avoid overfitting) and the minimum observations per leaf to 5 and each split to 2.
 
 In addition as the criterion for the quality of the split, I chose entropy. An interesting detail that was discovered, is that raising the depth of the tree improves the score to a depth of 8, and then lowers it. Finally, we got decent results of 0.922 in the validation set, and 0.96 in the training set, which means the model is not too complicated.
 
-### d. SVM:
+#### d. SVM:
 On this model, I ran Randomizedsearch due to runtime considerations since the model includes heavy calculations.
 
 In this model, a default penalty (C = 1) and a linear kernel (but 8-dimensional) were decided, and I also turned on the probability option to be able to calculate probabilities later on. The model gave us not such a good result: 0.89 on the validation set and a similar result on the training set, in addition, the high variance between the different folds indicates an unstable model, so I believe this model is less suitable for our data type.
