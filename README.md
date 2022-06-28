@@ -1,5 +1,5 @@
 # ML_project
-*During my studies at Tel Aviv University, I took a Machine learning course. As part of it, I did a project, In which I planned and built a system that predicts the chance of a user to perform a purchase under certain conditions. During this project, I worked with Sklearn, Pandas, and Numpy libraries, implemented the knowlege I gain during the course, and learned a lot about the different aspects of Machine learning algorithms.*
+*During my studies at Tel Aviv University, I took a Machine learning course. As part of it, I did a project, In which I planned and built a system that predicts the chance of a user to perform a purchase under certain conditions. During this project, I worked with Sklearn, Pandas, and Numpy libraries, implemented the knowlege I gained during the course, and learned a lot about the different aspects of Machine learning algorithms.*
 
 
 ## Instructions:
